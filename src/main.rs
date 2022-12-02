@@ -1,5 +1,5 @@
-mod day1;
+mod day2;
 
 fn main() {
-    day1::go("inputs/day1.txt");
+    day2::go("inputs/day2.txt");
 }

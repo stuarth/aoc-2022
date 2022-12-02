@@ -1,8 +1,10 @@
-use std::{fs::{File}, path::Path, io::BufRead, io};
 use std::collections::BinaryHeap;
+use std::{fs::File, io, io::BufRead, path::Path};
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where P: AsRef<Path>, {
+where
+    P: AsRef<Path>,
+{
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
@@ -18,7 +20,6 @@ fn parse(path: &str) -> io::Result<Vec<Vec<u32>>> {
                 elves.last_mut().unwrap().push(calories);
             }
         }
-
     }
 
     Ok(elves)
