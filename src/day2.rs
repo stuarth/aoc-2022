@@ -12,16 +12,16 @@ where
 #[derive(PartialEq, Eq, Debug, Copy, Clone)]
 enum Play {
     R,
-    S,
     P,
+    S,
 }
 
 impl Play {
     fn from(s: &str) -> Self {
         match s {
             "A" | "X" => Play::R,
-            "B" | "Y" => Play::S,
-            "C" | "Z" => Play::P,
+            "B" | "Y" => Play::P,
+            "C" | "Z" => Play::S,
             _ => panic!("don't know letter"),
         }
     }
@@ -30,8 +30,8 @@ impl Play {
 fn score(t: Play, o: Play) -> u32 {
     let piece_score = match o {
         Play::R => 1,
-        Play::S => 2,
-        Play::P => 3,
+        Play::P => 2,
+        Play::S => 3,
     };
 
     let play_score = match (t, o) {
@@ -59,14 +59,22 @@ fn p1(plays: Vec<(Play, Play)>) -> u32 {
     plays.iter().map(|(p1, p2)| score(*p1, *p2)).sum()
 }
 
-fn p2(elves: Vec<Vec<u32>>) -> u32 {
-    let mut heap: BinaryHeap<u32> = elves.iter().map(|e| e.iter().sum()).collect();
-
-    (0..3).into_iter().map(|_| heap.pop().unwrap()).sum()
+fn p2(plays: Vec<(Play, Play)>) -> u32 {
+    plays
+        .iter()
+        .map(|(p1, play)| {
+            let p2 = match (p1, play) {
+                (Play::P, Play::R) | (Play::R, Play::P) | (Play::S, Play::S) => Play::R,
+                (Play::R, Play::R) | (Play::S, Play::P) | (Play::P, Play::S) => Play::S,
+                (Play::S, Play::R) | (Play::P, Play::P) | (Play::R, Play::S) => Play::P,
+            };
+            score(*p1, p2)
+        })
+        .sum()
 }
 
 pub fn go(path: &str) {
     let plays = parse(path).unwrap();
 
-    dbg!(p1(plays));
+    dbg!(p2(plays));
 }
